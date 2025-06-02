@@ -279,7 +279,3 @@ Ou seja, a permissão de execução (`x`) está funcionando como esperado. ✅
 - Criar scripts com permissões corretas
 - A diferença entre notações octal e simbólica
 - Como usar `chmod` corretamente no terminal! 🥷💻
-
-```bash
-chmod +conhecimento você.sh
-```
