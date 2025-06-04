@@ -283,3 +283,144 @@ Ou seja, a permissão de execução (`x`) está funcionando como esperado. ✅
 ```bash
 chmod +conhecimento você.sh
 ```
+
+---
+
+# 👥 Gerenciando Grupos e Usuários no Linux
+
+## 🧑‍💻 Criando um Novo Usuário
+
+Para criar um novo usuário no sistema Linux, usamos o comando:
+
+```bash
+sudo adduser [nome_do_usuario]
+```
+
+## 💡 Esse comando cria:
+
+- Um novo diretório home para o usuário
+- As permissões e arquivos padrões dentro desse diretório
+
+---
+
+## ✅ Verificando se o usuário foi criado com sucesso:
+
+```bash
+cat /etc/passwd
+```
+- Esse arquivo contém os registros de todos os usuários do sistema. Use grep pra filtrar mais fácil, exemplo:
+
+```bash
+cat /etc/passwd | grep [nome_do_usuario]
+```
+
+---
+
+# 👪 Criando e Gerenciando Grupos
+
+## ➕ Criar um grupo:
+
+```bash
+sudo groupadd [nome_do_grupo]
+```
+
+---
+
+## 🔍 Verificar se o grupo foi criado:
+
+```bash
+getent group [nome_do_grupo]
+```
+
+---
+
+## ➕ Adicionar usuário a um grupo:
+
+```bash
+sudo usermod -aG [nome_do_grupo] [nome_do_usuario]
+```
+- ⚠️ A flag -aG serve para adicionar o usuário ao grupo sem removê-lo dos outros grupos que ele já pertence.
+
+---
+
+## ✅ Confirmar que o usuário está no grupo:
+
+```bash
+getent group [nome_do_grupo]
+```
+
+---
+
+# 📂 Dando acesso de grupo a um diretório/projeto
+
+1. Entre no diretório do projeto:
+
+```bash
+cd /caminho/do/projeto
+```
+
+---
+
+2. Veja permissões do diretório:
+
+```bash
+ls -ld
+``` 
+- Isso mostra a permissão do diretório e a qual usuário e grupo ele pertence.
+
+---
+
+3. Volte pro diretório pai e altere o grupo do projeto:
+
+```bash
+sudo chown -R :[nome_do_grupo] /home/diretorio
+```
+- 🌀 A flag -R aplica a alteração recursivamente a todos os subdiretórios e arquivos.
+
+--=
+
+# 🔄 Alternando entre usuários
+
+- Para mudar de usuário e simular a experiência como se fosse ele, use:
+
+```bash
+su - [nome_do_usuario]
+```
+
+- 🔐 Isso inicia uma nova sessão de shell como aquele usuário. Perfeito pra testar se as permissões estão certas.
+
+---
+
+* 💡 Dicas finais
+
+- Use groups [nome_do_usuario] para ver todos os grupos de um usuário.
+
+- Você pode mudar permissões com chmod, e donos com chown.
+
+- Gerenciar grupos é essencial para segurança e organização no sistema!
+
+---
+
+## ✅ Conclusão
+
+| Ação                       | Comando                          |
+| -------------------------- | -------------------------------- |
+| Criar usuário              | `sudo adduser nome`              |
+| Verificar criação          | `cat /etc/passwd`                |
+| Criar grupo                | `sudo groupadd grupo`            |
+| Verificar grupo            | `getent group grupo`             |
+| Adicionar usuário ao grupo | `sudo usermod -aG grupo usuario` |
+| Verificar associação       | `getent group grupo`             |
+| Mudar grupo dono da pasta  | `sudo chown -R :grupo /caminho`  |
+| Alternar usuário           | `su - usuario`                   |
+
+---
+
+- Criar um script bash no Linux, para processar logs de uma aplicação, utilizando o editor de texto vim.
+- Navegar entre os modos de inserção e comando no editor de texto vim, clicando na tecla i para o modo inserção e na tecla ESC para o modo de comando.
+- Salvar arquivos no vim com o comando :w e sair do vim com o comando :q.
+- Utilizar o comando chmod para adicionar e remover permissões de arquivos e diretórios.
+- Usar as notações octal e a simbólica para gerenciar permissões no Linux.
+- Gerenciar proprietários e grupos de arquivos e diretórios, através do comando chown.
+
+---
