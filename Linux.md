@@ -258,7 +258,7 @@ chmod o=r script.sh     # Define somente leitura para outros
   - `rwx` → usuário
   - `r-x` → grupo
   - `r-x` → outros
-- `vinic vinic` → dono e grupo
+- `user user` → dono e grupo
 - `86` → tamanho em bytes
 
 ### 📊 2: Executando o script
