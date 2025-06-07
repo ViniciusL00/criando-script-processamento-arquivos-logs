@@ -424,3 +424,250 @@ su - [nome_do_usuario]
 - Gerenciar proprietários e grupos de arquivos e diretórios, através do comando chown.
 
 ---
+
+# 🔍 Encontrando Arquivos com `find` e Laços de Repetição no Bash
+
+## 📁 Objetivo da Aula
+
+Aprender a:
+- Usar o comando `find` para localizar arquivos.
+- Usar `while` para processar os arquivos encontrados.
+- Redirecionar a saída com `|` (pipe).
+- Entender o uso de `IFS`, `read`, `-print0` e delimitadores nulos.
+- Executar scripts com o terminal.
+
+---
+
+## 🔎 Buscando arquivos com `find`
+
+### Comando base:
+
+```bash
+find . -name "*.log"
+```
+
+🧠 Esse comando busca **todos os arquivos terminados em `.log`** no diretório atual (`.`) e seus subdiretórios.
+
+---
+
+## 📂 Acessando o diretório do script
+
+```bash
+cd scripts-linux/
+```
+
+E abrimos o script com o editor:
+
+```bash
+vim monitoramento-logs.sh
+```
+
+---
+
+## ✍️ Editando o script
+
+Dentro do `vim`, começamos com:
+
+```bash
+#!/bin/bash
+
+LOG_DIR="../myapps/logs"
+echo "Verificando logs no diretório $LOG_DIR"
+```
+
+Substituímos o `.` do find pela variável:
+
+```bash
+find $LOG_DIR -name "*.log"
+```
+
+---
+
+## 🔁 Laços de Repetição (while loop)
+
+### O que é?
+
+Laço de repetição executa **ações em sequência enquanto uma condição for verdadeira**.
+
+### Estrutura:
+
+```bash
+while [ condição ]; do
+  # comandos
+done
+```
+
+---
+
+## 🧪 Aplicando o pipe `|`
+
+Queremos pegar a saída do `find` e **redirecionar para um `while`**:
+
+```bash
+find $LOG_DIR -name "*.log" | while IFS= read linha; do
+  echo "Arquivo: $linha"
+done
+```
+
+Mas esse método não lida bem com **espaços ou caracteres especiais**.
+
+---
+
+## 🧠 Melhor prática com `-print0` e `read -d ''`
+
+### Explicando a estrutura completa:
+
+```bash
+find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
+  echo "Arquivo encontrado: $arquivo"
+done
+```
+
+---
+
+# 🔍 Encontrando Arquivos com `find` e Laços de Repetição no Bash
+
+## 📁 Objetivo da Aula
+
+Aprender a:
+- Usar o comando `find` para localizar arquivos.
+- Usar `while` para processar os arquivos encontrados.
+- Redirecionar a saída com `|` (pipe).
+- Entender o uso de `IFS`, `read`, `-print0` e delimitadores nulos.
+- Executar scripts com o terminal.
+
+---
+
+## 🔎 Buscando arquivos com `find`
+
+### Comando base:
+
+```bash
+find . -name "*.log"
+```
+
+🧠 Esse comando busca **todos os arquivos terminados em `.log`** no diretório atual (`.`) e seus subdiretórios.
+
+---
+
+## 📂 Acessando o diretório do script
+
+```bash
+cd scripts-linux/
+```
+
+E abrimos o script com o editor:
+
+```bash
+vim monitoramento-logs.sh
+```
+
+---
+
+## ✍️ Editando o script
+
+Dentro do `vim`, começamos com:
+
+```bash
+#!/bin/bash
+
+LOG_DIR="../myapps/logs"
+echo "Verificando logs no diretório $LOG_DIR"
+```
+
+Substituímos o `.` do find pela variável:
+
+```bash
+find $LOG_DIR -name "*.log"
+```
+
+---
+
+## 🔁 Laços de Repetição (while loop)
+
+### O que é?
+
+Laço de repetição executa **ações em sequência enquanto uma condição for verdadeira**.
+
+### Estrutura:
+
+```bash
+while [ condição ]; do
+  # comandos
+done
+```
+
+---
+
+## 🧪 Aplicando o pipe `|`
+
+Queremos pegar a saída do `find` e **redirecionar para um `while`**:
+
+```bash
+find $LOG_DIR -name "*.log" | while IFS= read linha; do
+  echo "Arquivo: $linha"
+done
+```
+
+Mas esse método não lida bem com **espaços ou caracteres especiais**.
+
+---
+
+## 🧠 Melhor prática com `-print0` e `read -d ''`
+
+### Explicando a estrutura completa:
+
+```bash
+find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
+  echo "Arquivo encontrado: $arquivo"
+done
+```
+
+### 🔍 Quebrando isso:
+
+|   Parte   |                            Explicação                               |
+|-----------|---------------------------------------------------------------------|
+| `-print0` | Faz o `find` separar os resultados com um caractere **nulo**        |
+| `IFS=`    | Internal Field Separator vazio — evita que espaços quebrem linhas   |
+| `read -r` | Lê a linha sem interpretar barras invertidas                        |
+| `-d ''`   | Define que o delimitador é nulo                                     |
+| `arquivo` | Variável que recebe o caminho de cada arquivo encontrado            |
+
+---
+
+## ✅ Executando o script
+
+```bash
+./monitoramento-logs.sh
+```
+
+> 🔐 Lembre-se de dar permissão de execução se necessário:
+
+```bash
+chmod +x monitoramento-logs.sh
+```
+
+---
+
+## 📌 Resumo Final
+
+- `find` é usado pra buscar arquivos recursivamente.
+- `while` permite processar cada resultado do `find`.
+- O uso de `-print0` + `read -d ''` evita problemas com nomes de arquivos complicados.
+- Pipe (`|`) conecta saída e entrada entre comandos.
+
+---
+
+## 🧠 Exemplo Final do Script
+
+```bash
+#!/bin/bash
+
+LOG_DIR="../myapps/logs"
+echo "Verificando logs no diretório $LOG_DIR"
+
+find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
+  echo "Arquivo encontrado: $arquivo"
+done
+```
+---
