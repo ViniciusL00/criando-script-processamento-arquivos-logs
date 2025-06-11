@@ -868,3 +868,85 @@ echo "Olá mundo!" > mensagem.txt
 ⚠️ **Se já existir**, o conteúdo será **apagado** (zerado), mas o arquivo continua lá.
 
 ---
+
+# 🛠️ Modificando Conteúdo de Arquivos no Linux
+
+Neste conteúdo, aprendemos como **filtrar informações sensíveis** e **modificar arquivos** usando comandos como `grep`, `>>` e `sed`.
+
+---
+
+## 🔍 1. Filtrando dados sensíveis com `grep` e `>>`
+
+```bash
+grep "SENSITIVE_DATA" $arquivo >> "${arquivo}.filtrado"
+```
+---
+
+### ✅ Explicação:
+
+- grep "SENSITIVE_DATA": procura por linhas que contenham a palavra SENSITIVE_DATA no arquivo.
+- $arquivo: é o nome do arquivo atual (dado pelo while do script).
+- ```>> "${arquivo}.filtrado": redireciona a saída para o arquivo ${arquivo}.filtrado```, sem apagar o que já existe nele.
+- 👉 Isso é diferente de > que sobrescreve o conteúdo!
+
+---
+
+## ✂️ 2. Substituindo informações sensíveis com sed
+
+**Exemplo direto no terminal:**
+
+```bash
+sed 's/User password is .*/User password is REDACTED/g' myapp-backend.log
+```
+
+---
+
+### ✅ Explicação:
+
+- sed: editor de fluxo (stream editor) usado para fazer alterações de texto.
+- 's/.../.../g': é a sintaxe de substituição do sed:
+- s: inicia a substituição
+- User password is .*: padrão de texto a ser encontrado. O .* significa "qualquer coisa depois".
+- User password is REDACTED: o texto que substituirá o original.
+- g: significa global, ou seja, aplica a substituição em todas as ocorrências da linha.
+
+---
+
+## 🔁 3. Substituições múltiplas no script
+
+```bash
+sed -i 's/User password is .*/User password is REDACTED/g' "${arquivo}.filtrado"
+sed -i 's/User password reset request with token .*/User password reset request with token REDACTED/g' "${arquivo}.filtrado"
+sed -i 's/API key leaked: .*/API key leaked: REDACTED/g' "${arquivo}.filtrado"
+sed -i 's/User credit card last four digits: .*/User credit card last four digits: REDACTED/g' "${arquivo}.filtrado"
+sed -i 's/User session initiated with token: .*/User session initiated with token: REDACTED/g' "${arquivo}.filtrado"
+```
+
+---
+
+### ✅ Explicação linha por linha:
+
+- -i: faz a edição diretamente no arquivo, sem precisar redirecionar para outro.
+- Cada sed busca por um padrão específico e substitui pelo termo REDACTED (redigido).
+- ${arquivo}.filtrado: é o arquivo onde estão sendo feitas as modificações.
+
+---
+
+### 🔐 Isso ajuda a:
+
+- Proteger dados sensíveis.
+- Garantir que o arquivo mantido para análise esteja limpo.
+- Evitar exposição de senhas, tokens e cartões de crédito.
+
+## 📌 Conclusão
+
+Este processo de filtragem + substituição automatizada:
+
+1. Filtra linhas sensíveis com ```grep + >>```.
+2. Aplica várias regras com ```sed``` para mascarar dados. 
+3. Mantém os dados organizados e seguros.
+4. Gera arquivos ```.filtrado``` prontos para serem analisados ou enviados sem riscos! 🔐🐧
+
+- Ideal para scripts de auditoria, monitoramento de segurança e sistemas que lidam com dados privados.
+
+---
