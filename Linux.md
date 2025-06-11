@@ -903,12 +903,12 @@ sed 's/User password is .*/User password is REDACTED/g' myapp-backend.log
 
 ### ✅ Explicação:
 
-- sed: editor de fluxo (stream editor) usado para fazer alterações de texto.
-- 's/.../.../g': é a sintaxe de substituição do sed:
-- s: inicia a substituição
-- User password is .*: padrão de texto a ser encontrado. O .* significa "qualquer coisa depois".
-- User password is REDACTED: o texto que substituirá o original.
-- g: significa global, ou seja, aplica a substituição em todas as ocorrências da linha.
+- ```sed```: editor de fluxo (stream editor) usado para fazer alterações de texto.
+- ```'s/.../.../g'```: é a sintaxe de substituição do sed:
+- ```s:``` inicia a substituição
+- ```User password is .*```: padrão de texto a ser encontrado. O .* significa "qualquer coisa depois".
+- ```User password is REDACTED```: o texto que substituirá o original.
+- ```g```: significa global, ou seja, aplica a substituição em todas as ocorrências da linha.
 
 ---
 
