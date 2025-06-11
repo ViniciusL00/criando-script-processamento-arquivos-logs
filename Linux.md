@@ -523,106 +523,6 @@ find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
 done
 ```
 
----
-
-# 🔍 Encontrando Arquivos com `find` e Laços de Repetição no Bash
-
-## 📁 Objetivo da Aula
-
-Aprender a:
-- Usar o comando `find` para localizar arquivos.
-- Usar `while` para processar os arquivos encontrados.
-- Redirecionar a saída com `|` (pipe).
-- Entender o uso de `IFS`, `read`, `-print0` e delimitadores nulos.
-- Executar scripts com o terminal.
-
----
-
-## 🔎 Buscando arquivos com `find`
-
-### Comando base:
-
-```bash
-find . -name "*.log"
-```
-
-🧠 Esse comando busca **todos os arquivos terminados em `.log`** no diretório atual (`.`) e seus subdiretórios.
-
----
-
-## 📂 Acessando o diretório do script
-
-```bash
-cd scripts-linux/
-```
-
-E abrimos o script com o editor:
-
-```bash
-vim monitoramento-logs.sh
-```
-
----
-
-## ✍️ Editando o script
-
-Dentro do `vim`, começamos com:
-
-```bash
-#!/bin/bash
-
-LOG_DIR="../myapps/logs"
-echo "Verificando logs no diretório $LOG_DIR"
-```
-
-Substituímos o `.` do find pela variável:
-
-```bash
-find $LOG_DIR -name "*.log"
-```
-
----
-
-## 🔁 Laços de Repetição (while loop)
-
-### O que é?
-
-Laço de repetição executa **ações em sequência enquanto uma condição for verdadeira**.
-
-### Estrutura:
-
-```bash
-while [ condição ]; do
-  # comandos
-done
-```
-
----
-
-## 🧪 Aplicando o pipe `|`
-
-Queremos pegar a saída do `find` e **redirecionar para um `while`**:
-
-```bash
-find $LOG_DIR -name "*.log" | while IFS= read linha; do
-  echo "Arquivo: $linha"
-done
-```
-
-Mas esse método não lida bem com **espaços ou caracteres especiais**.
-
----
-
-## 🧠 Melhor prática com `-print0` e `read -d ''`
-
-### Explicando a estrutura completa:
-
-```bash
-find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
-  echo "Arquivo encontrado: $arquivo"
-done
-```
-
 ### 🔍 Quebrando isso:
 
 |   Parte   |                            Explicação                               |
@@ -839,3 +739,132 @@ Esses comandos ampliam bastante sua capacidade de **navegar, buscar e administra
 
 ---
 
+# 🧹 Filtrando Logs com `grep` no Linux
+
+## 📌 O que é o `grep`?
+
+O comando `grep` é usado para **buscar padrões de texto dentro de arquivos**. É uma das ferramentas mais poderosas e populares para análise de logs no Linux.
+
+---
+
+## 🔍 Buscando por "ERROR" em arquivos de log
+
+```bash
+grep "ERROR" myapp-backend.log
+```
+
+🟡 Isso vai **buscar todas as linhas** dentro do arquivo `myapp-backend.log` que contenham exatamente a palavra `ERROR` (em maiúsculas).
+
+⚠️ O `grep` é sensível a maiúsculas e minúsculas!  
+Se quiser ignorar isso, use a opção `-i`.
+
+---
+
+## 🛠️ Redirecionando a saída com `>` (maior que)
+
+```bash
+grep "ERROR" myapp-backend.log > logs-erro
+```
+
+📤 Isso **redireciona a saída** do `grep` (ou seja, as linhas com "ERROR") para um novo arquivo chamado `logs-erro`.
+
+📄 Agora, ao rodar:
+
+```bash
+cat logs-erro
+```
+
+Você verá **somente os erros filtrados**, sem alterar o arquivo original.
+
+---
+
+## ✍️ Editando o script `monitoramento-logs.sh`
+
+1. Abra o script:
+```bash
+vim monitoramento-logs.sh
+```
+
+2. Substitua a linha:
+```bash
+echo "Arquivo encontrado $arquivo"
+```
+
+Por esta:
+```bash
+grep "ERROR" "$arquivo" > "${arquivo}.filtrado"
+```
+
+---
+
+## 🧠 O que essa linha faz?
+
+```bash
+grep "ERROR" "$arquivo" > "${arquivo}.filtrado"
+```
+
+🔍 **Busca no arquivo** representado pela variável `$arquivo` todas as linhas com "ERROR".  
+📂 **Cria um novo arquivo** com o mesmo nome + `.filtrado` contendo apenas os erros.
+
+✅ Exemplo:
+Se `$arquivo` for `myapp-backend.log`, será criado:
+
+```
+myapp-backend.log.filtrado
+```
+
+---
+
+## 📁 Verificando os arquivos filtrados
+
+Navegue até a pasta dos logs:
+
+```bash
+cd myapps/logs
+```
+
+Liste os arquivos:
+
+```bash
+ls
+```
+
+Você verá os arquivos `.log` originais e os novos `.filtrado`.
+
+---
+
+## 📌 Resumo
+
+| Comando | Função |
+|---------|--------|
+| `grep "ERROR" arquivo` | Filtra linhas com "ERROR" |
+|    `>`  | Redireciona a saída para outro arquivo   |
+| `${arquivo}.filtrado` | Nome do novo arquivo com os erros filtrados |
+
+🧰 Usar `grep` com redirecionamento é uma técnica essencial para **analisar grandes arquivos de log** e **extrair só o que importa**.
+
+---
+
+# 📤 Operador `>` no Linux
+
+O operador `>` é usado para **redirecionar a saída de um comando para um arquivo**.
+
+## ✍️ Exemplos de uso:
+
+### 🔸 Redirecionar saída:
+```bash
+echo "Olá mundo!" > mensagem.txt
+```
+📁 Isso cria (ou sobrescreve) o arquivo `mensagem.txt` com o conteúdo `"Olá mundo!"`.
+
+---
+
+### 🔸 Criar um arquivo vazio:
+```bash
+> novo-arquivo.txt
+```
+📂 Cria um arquivo chamado `novo-arquivo.txt`.
+
+⚠️ **Se já existir**, o conteúdo será **apagado** (zerado), mas o arquivo continua lá.
+
+---
