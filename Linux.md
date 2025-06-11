@@ -884,8 +884,8 @@ grep "SENSITIVE_DATA" $arquivo >> "${arquivo}.filtrado"
 
 ### ✅ Explicação:
 
-- grep "SENSITIVE_DATA": procura por linhas que contenham a palavra SENSITIVE_DATA no arquivo.
-- $arquivo: é o nome do arquivo atual (dado pelo while do script).
+- ```grep "SENSITIVE_DATA"```: procura por linhas que contenham a palavra ```SENSITIVE_DATA``` no arquivo.
+- ```$arquivo```: é o nome do arquivo atual (dado pelo while do script).
 - ```>> "${arquivo}.filtrado": redireciona a saída para o arquivo ${arquivo}.filtrado```, sem apagar o que já existe nele.
 - 👉 Isso é diferente de > que sobrescreve o conteúdo!
 
@@ -926,9 +926,9 @@ sed -i 's/User session initiated with token: .*/User session initiated with toke
 
 ### ✅ Explicação linha por linha:
 
-- -i: faz a edição diretamente no arquivo, sem precisar redirecionar para outro.
-- Cada sed busca por um padrão específico e substitui pelo termo REDACTED (redigido).
-- ${arquivo}.filtrado: é o arquivo onde estão sendo feitas as modificações.
+- ```-i```: faz a edição diretamente no arquivo, sem precisar redirecionar para outro.
+- Cada ```sed``` busca por um padrão específico e substitui pelo termo REDACTED (redigido).
+- ```${arquivo}.filtrado```: é o arquivo onde estão sendo feitas as modificações.
 
 ---
 
