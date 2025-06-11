@@ -425,6 +425,9 @@ su - [nome_do_usuario]
 
 ---
 
+# 🐧 Módulo 2: Fazendo Busca e Usando Filtros
+
+---
 # 🔍 Encontrando Arquivos com `find` e Laços de Repetição no Bash
 
 ## 📁 Objetivo da Aula
