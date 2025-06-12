@@ -1541,3 +1541,125 @@ Com os comandos **wc -w** e **wc -l**:
 📚 Dica final: Use esses dados para gerar relatórios e observar o comportamento dos logs ao longo do tempo. Isso é essencial para detecção precoce de problemas!
 
 ---
+
+# 📊 Resumo: Comando `wc` no Linux (Word Count)
+
+O comando `wc` (word count) é uma ferramenta poderosa no terminal Linux 🐧 que serve para contar **linhas**, **palavras**, **caracteres**, **bytes**, e até o **tamanho da linha mais longa** dentro de arquivos ou da entrada padrão (stdin).
+
+---
+
+## 🔧 Principais Opções do `wc`
+
+### 📄 Contar Linhas `-l`
+
+Mostra **apenas o número de linhas** no arquivo.
+
+```bash
+wc -l arquivo.txt
+```
+
+> 🧠 **Exemplo:** Se o arquivo tem 42 linhas, o retorno será:
+> ```
+> 42 arquivo.txt
+> ```
+
+---
+
+### 📝 Contar Palavras `-w`
+
+Mostra **apenas o número de palavras** no arquivo.
+
+```bash
+wc -w arquivo.txt
+```
+
+> 📚 Bom para medir a densidade de conteúdo textual!
+
+---
+
+### 🔤 Contar Caracteres `-m`
+
+Mostra o **número de caracteres**, incluindo **espaços** e **quebras de linha**.
+
+```bash
+wc -m arquivo.txt
+```
+
+> 🧐 Útil para análise de tamanho real do conteúdo textual!
+
+---
+
+### 💾 Contar Bytes `-c`
+
+Mostra o **tamanho do arquivo em bytes**.
+
+```bash
+wc -c arquivo.txt
+```
+
+> ⚠️ Lembra: 1 caractere ≠ 1 byte se estiver usando codificação UTF-8 com acentos!
+
+---
+
+### 📏 Tamanho da Linha Mais Longa `-L`
+
+Mostra o **comprimento da linha mais longa** do arquivo (em caracteres).
+
+```bash
+wc -L arquivo.txt
+```
+
+> 🧵 Ajuda a identificar linhas que podem quebrar layouts ou que precisam de truncamento.
+
+---
+
+## 🔄 Combinação de Opções
+
+Você pode combinar várias opções para mostrar múltiplos valores de uma só vez:
+
+```bash
+wc -l -w -m arquivo.txt
+```
+
+Ou, de forma mais simples, apenas:
+
+```bash
+wc arquivo.txt
+```
+
+> Isso exibirá:  
+> `linhas palavras bytes nome-do-arquivo`
+
+---
+
+## 🛠️ Quando Usar o `wc`
+
+- Em **scripts de monitoramento**, para medir crescimento de logs 📈  
+- Em **relatórios automáticos**, para analisar arquivos de texto 🧾  
+- Para **verificar conteúdo textual**, antes de fazer parsing ou análise de dados 🔍
+
+---
+
+## ✅ Dica
+
+Se quiser **apenas o número**, sem o nome do arquivo:
+
+```bash
+wc -l < arquivo.txt
+```
+
+> Usa o **redirecionamento de entrada** `<` para evitar que o nome do arquivo apareça na saída.
+
+---
+
+## 🧠 Resumo Final
+
+| Opção | O que faz                       |
+|-------|---------------------------------|
+| `-l`  | Conta linhas                    |
+| `-w`  | Conta palavras                  |
+| `-m`  | Conta caracteres                |
+| `-c`  | Conta bytes                     |
+| `-L`  | Mostra tamanho da linha mais longa |
+
+---
