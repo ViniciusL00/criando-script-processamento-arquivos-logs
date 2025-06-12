@@ -425,6 +425,9 @@ su - [nome_do_usuario]
 
 ---
 
+# 🐧 Módulo 2: Fazendo Busca e Usando Filtros
+
+---
 # 🔍 Encontrando Arquivos com `find` e Laços de Repetição no Bash
 
 ## 📁 Objetivo da Aula
@@ -884,8 +887,8 @@ grep "SENSITIVE_DATA" $arquivo >> "${arquivo}.filtrado"
 
 ### ✅ Explicação:
 
-- grep "SENSITIVE_DATA": procura por linhas que contenham a palavra SENSITIVE_DATA no arquivo.
-- $arquivo: é o nome do arquivo atual (dado pelo while do script).
+- ```grep "SENSITIVE_DATA"```: procura por linhas que contenham a palavra ```SENSITIVE_DATA``` no arquivo.
+- ```$arquivo```: é o nome do arquivo atual (dado pelo while do script).
 - ```>> "${arquivo}.filtrado": redireciona a saída para o arquivo ${arquivo}.filtrado```, sem apagar o que já existe nele.
 - 👉 Isso é diferente de > que sobrescreve o conteúdo!
 
@@ -903,12 +906,13 @@ sed 's/User password is .*/User password is REDACTED/g' myapp-backend.log
 
 ### ✅ Explicação:
 
-- sed: editor de fluxo (stream editor) usado para fazer alterações de texto.
-- 's/.../.../g': é a sintaxe de substituição do sed:
-- s: inicia a substituição
-- User password is .*: padrão de texto a ser encontrado. O .* significa "qualquer coisa depois".
-- User password is REDACTED: o texto que substituirá o original.
-- g: significa global, ou seja, aplica a substituição em todas as ocorrências da linha.
+- ```sed```: editor de fluxo (stream editor) usado para fazer alterações de texto.
+- ```'s/.../.../g'```: é a sintaxe de substituição do sed:
+- ```s:``` inicia a substituição
+- ```User password is .*```: padrão de texto a ser encontrado. 
+- O ```.*``` significa "qualquer coisa depois".
+- ```User password is REDACTED```: o texto que substituirá o original.
+- ```g```: significa global, ou seja, aplica a substituição em todas as ocorrências da linha.
 
 ---
 
@@ -926,9 +930,9 @@ sed -i 's/User session initiated with token: .*/User session initiated with toke
 
 ### ✅ Explicação linha por linha:
 
-- -i: faz a edição diretamente no arquivo, sem precisar redirecionar para outro.
-- Cada sed busca por um padrão específico e substitui pelo termo REDACTED (redigido).
-- ${arquivo}.filtrado: é o arquivo onde estão sendo feitas as modificações.
+- ```-i```: faz a edição diretamente no arquivo, sem precisar redirecionar para outro.
+- Cada ```sed``` busca por um padrão específico e substitui pelo termo REDACTED (redigido).
+- ```${arquivo}.filtrado```: é o arquivo onde estão sendo feitas as modificações.
 
 ---
 
@@ -950,3 +954,4 @@ Este processo de filtragem + substituição automatizada:
 - Ideal para scripts de auditoria, monitoramento de segurança e sistemas que lidam com dados privados.
 
 ---
+
