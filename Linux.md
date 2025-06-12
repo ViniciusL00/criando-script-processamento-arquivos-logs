@@ -954,4 +954,7 @@ Este processo de filtragem + substituição automatizada:
 - Ideal para scripts de auditoria, monitoramento de segurança e sistemas que lidam com dados privados.
 
 ---
+<<<<<<< HEAD
 
+=======
+>>>>>>> b77c6840acf5b4c7b70e55b96d6d80d08327b2fd
