@@ -954,3 +954,464 @@ Este processo de filtragem + substituição automatizada:
 - Ideal para scripts de auditoria, monitoramento de segurança e sistemas que lidam com dados privados.
 
 ---
+
+# 📁 Módulo 3: Lidando com Arquivos
+
+## 🗂️ Aula: Ordenando Informações em Arquivos
+
+Aprendemos como **ordenar dados** de arquivos de log usando o comando `sort`, e como incorporar isso em um **script de monitoramento automatizado**.
+
+---
+
+## 🔤 Comando `sort`
+
+O comando `sort` serve para **ordenar linhas de texto** de um arquivo.
+
+### 🧪 Exemplo básico:
+```bash
+sort myapp-backend.log.filtrado
+```
+- Ordena as linhas por padrão alfabético e numérico (de A a Z, ou do menor para o maior).
+- A **saída é exibida no terminal**, mas **não altera o arquivo original**.
+
+---
+
+## 🔁 Ordem Reversa com `-r`
+
+```bash
+sort -r myapp-backend.log.filtrado
+```
+- Exibe as linhas **da mais recente para a mais antiga** (ordem reversa).
+- Ideal para ver os eventos mais recentes primeiro.
+
+---
+
+## 💾 Salvando a ordenação com `-o`
+
+```bash
+sort myapp-backend.log.filtrado -o logs-ordenados
+```
+- Redireciona a saída ordenada para o arquivo `logs-ordenados`.
+- Agora é possível usar `cat logs-ordenados` para ver o conteúdo já ordenado.
+
+---
+
+## 🛠️ Incrementando o Script
+
+### 🚀 Script atualizado:
+```bash
+#!/bin/bash
+
+LOG_DIR="../myapp/logs"
+
+echo "Verificando logs no diretorio $LOG_DIR"
+
+find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
+    grep "ERROR" "$arquivo" > "${arquivo}.filtrado"
+    grep "SENSITIVE_DATA" "$arquivo" >> "${arquivo}.filtrado"
+
+    sed -i 's/User password is .*/User password is REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User password reset request with token .*/User password reset request with token REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/API key leaked: .*/API key leaked: REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User credit card last four digits: .*/User credit card last four digits: REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User session initiated with token: .*/User session initiated with token: REDACTED/g' "${arquivo}.filtrado"
+
+    sort "${arquivo}.filtrado" -o "${arquivo}.filtrado"
+done
+```
+
+### ✅ O que foi adicionado:
+- `sort "${arquivo}.filtrado" -o "${arquivo}.filtrado"`:
+  - Ordena os dados filtrados.
+  - **Sobrescreve** o conteúdo do arquivo com os dados já ordenados.
+
+---
+
+## 💡 Conclusão
+
+✅ Com o uso do `sort`, conseguimos:
+- Organizar logs por ordem cronológica.
+- Priorizar os eventos mais recentes (com `-r`).
+- Automatizar a ordenação diretamente no script.
+
+⚙️ Isso melhora a **legibilidade dos logs**, ajuda na **análise de erros** e mantém os dados organizados para auditoria e segurança.
+
+---
+
+## 📎 Comandos úteis
+
+| Comando | Função |
+|--------|--------|
+| `sort arquivo` | Ordena o conteúdo |
+| `sort -r` | Ordem reversa |
+| `sort -o novo-arquivo` | Salva ordenado |
+| `cat arquivo` | Visualiza conteúdo |
+| `vim monitoramento-logs.sh` | Edita o script |
+| `./monitoramento-logs.sh` | Executa o script |
+
+---
+
+### 🧠 **Resumo: Comando `sort` no Linux**  
+
+O comando `sort` é uma ferramenta poderosa no Linux usada para **ordenar linhas de texto** em arquivos ou diretamente da saída de outros comandos. Ele pode ordenar **alfabeticamente** ou **numericamente**, dependendo das opções usadas. É um comando essencial no processamento de dados em arquivos de texto. 🔍📂
+
+---
+
+### ⚙️ **Principais opções do `sort`**:
+
+| Opção | Significado | Exemplo |
+|-------|-------------|---------|
+| `-r` | 🔄 Ordena em ordem reversa (decrescente) | `sort -r arquivo.txt` |
+| `-n` | 🔢 Ordenação numérica (em vez de alfabética) | `sort -n numeros.txt` |
+| `-k` | 📊 Especifica a coluna usada para ordenar | `sort -k 2 arquivo.txt` (ordena pela 2ª coluna) |
+| `-u` | 🧹 Remove duplicatas (deixa apenas uma instância) | `sort -u arquivo.txt` |
+| `-t` | 🧱 Define um delimitador de campo | `sort -t , -k 1 arquivo.csv` |
+| `-o` | 💾 Salva a saída em um arquivo especificado | `sort entrada.txt -o saida.txt` |
+| `-f` | 🔠 Ignora diferenças entre maiúsculas e minúsculas | `sort -f arquivo.txt` |
+
+---
+
+### 💡 **Por que usar o `sort`?**
+
+- Facilita a **organização de dados** de forma rápida e eficiente.
+- Pode ser combinado com outros comandos como `cat`, `grep`, `cut`, etc.
+- Ideal para **scripts de automação**, **filtragem de logs**, e **tratamento de arquivos CSV ou TXT**.
+
+---
+
+# 🧹 Removendo Duplicatas em Arquivos de Log com `uniq`
+
+## 📚 Visão Geral
+
+Durante o monitoramento de logs, é comum que algumas linhas apareçam duplicadas. Isso acontece, por exemplo, quando a mesma mensagem contém as palavras-chave **ERROR** e **SENSITIVE_DATA**, fazendo com que seja adicionada duas vezes ao arquivo filtrado.
+
+**Exemplo de duplicação:**
+
+- 2024-09-03 12:00:00 ERROR: SENSITIVE_DATA: Database backup contains sensitive information.
+- 2024-09-03 12:00:00 ERROR: SENSITIVE_DATA: Database backup contains sensitive information.
+
+
+⚠️ Duplicatas tornam a leitura e análise mais difíceis — precisamos removê-las!
+
+---
+
+## 🧰 Utilizando o Comando `uniq`
+
+O comando `uniq` serve para **remover linhas duplicadas consecutivas** de arquivos de texto.
+
+### 🧪 Sintaxe:
+```bash
+uniq nome_do_arquivo
+```
+
+✅ Ele mantém apenas a primeira ocorrência de cada linha.
+
+⚠️ Para funcionar corretamente, o arquivo deve estar ordenado com **sort**, pois **uniq** só reconhece duplicatas consecutivas.
+
+---
+
+## 💾 Salvando sem Duplicatas
+
+```bash
+uniq myapp-backend.log.filtrado > logs-sem-duplicatas
+```
+📝 Isso cria um novo arquivo **logs-sem-duplicatas** contendo apenas linhas únicas.
+
+✅ Verifique com:
+
+```bash
+cat logs-sem-duplicatas
+```
+
+---
+
+## 🛠️ Atualizando o Script de Monitoramento
+
+Vamos incorporar o **uniq** ao nosso script **monitoramento-logs.sh**:
+
+🔧 Script Completo:
+
+```bash
+#!/bin/bash
+
+LOG_DIR="../myapp/logs"
+
+echo "Verificando logs no diretorio $LOG_DIR"
+
+find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
+    grep "ERROR" "$arquivo" > "${arquivo}.filtrado"
+    grep "SENSITIVE_DATA" "$arquivo" >> "${arquivo}.filtrado"
+
+    sed -i 's/User password is .*/User password is REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User password reset request with token .*/User password reset request with token REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/API key leaked: .*/API key leaked: REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User credit card last four digits: .*/User credit card last four digits: REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User session initiated with token: .*/User session initiated with token: REDACTED/g' "${arquivo}.filtrado"
+
+    sort "${arquivo}.filtrado" -o "${arquivo}.filtrado"
+
+    uniq "${arquivo}.filtrado" > "${arquivo}.unico"
+done
+```
+
+---
+
+📌 Com isso:
+
+- 🔍 Logs são filtrados por erro e dados sensíveis.
+- ✂️ Dados sensíveis são redigidos com **REDACTED**.
+- 📆 Os dados são ordenados por data.
+- 🔁 Duplicatas são removidas com **uniq**.
+
+---
+
+## 🧪 Após executar:
+
+1. Execute o script:
+
+```bash
+./monitoramento-logs.sh
+```
+
+2. Verifique os arquivos:
+
+```bash
+ls ../myapp/logs
+```
+
+3. Veja o conteúdo sem duplicatas:
+
+```bash
+cat myapp-backend.log.unico
+```
+
+---
+
+## ✅ Conclusão
+
+O uso combinado de **sort** + **uniq** é uma técnica poderosa para limpar arquivos de log, melhorando a legibilidade e a análise posterior. 🔍📁
+
+Essa prática é essencial para scripts de automação e monitoramento eficazes! 🚀
+
+---
+
+# 🔍 Comparando Arquivos com `diff` no Linux
+
+## 📚 Por que comparar arquivos?
+
+Depois de filtrar, ordenar e remover duplicatas dos logs, temos dois arquivos importantes:
+
+- 📄 `myapp-backend.log` → Arquivo original
+- 📄 `myapp-backend.log.unico` → Arquivo final processado
+
+Queremos saber: **o que mudou entre esses dois arquivos?**
+
+Comparar manualmente com `cat` é demorado e propenso a erros. 😩  
+👉 O Linux resolve isso com o comando **`diff`**!
+
+---
+
+## 🧰 O que é o `diff`?
+
+`diff` compara **dois arquivos linha por linha** e mostra:
+
+- ❌ Linhas que foram **removidas**
+- ✏️ Linhas que foram **alteradas**
+- ➕ Linhas que foram **adicionadas**
+
+### 🧪 Sintaxe:
+```bash
+diff arquivo1 arquivo2
+```
+
+Exemplo:
+```bash
+diff myapp-backend.log myapp-backend.log.unico
+```
+
+---
+
+## 🔠 Como interpretar a saída do `diff`?
+
+A saída segue o formato:
+
+- **`[número][letra][número]`**
+
+### Letras usadas:
+- `d` → **deleted** (removido)
+- `a` → **added** (adicionado)
+- `c` → **changed** (modificado)
+
+---
+
+### 🧵 Exemplo detalhado:
+
+```bash
+2d1
+< 2024-09-01 10:06:10 INFO: Retrying database connection...
+```
+
+🧠 Tradução:
+
+- A linha 2 do arquivo original foi **deletada**
+- O conteúdo está **apenas no arquivo original**
+
+---
+
+```bash
+4,6c3
+< 2024-09-01 10:09:55 INFO: Database connection established.
+< 2024-09-01 11:00:00 INFO: SENSITIVE_DATA: User password is 12345.
+< 2024-09-01 11:00:00 INFO: User logged in with username: admin.
+---
+> 2024-09-01 11:00:00 INFO: SENSITIVE_DATA: User password is REDACTED
+```
+
+🧠 Tradução:
+
+- Linhas 4 a 6 do original foram **modificadas**
+- Agora, no arquivo `.unico`, estão representadas por **uma única linha (linha 3)**  
+- A senha do usuário foi **redigida (REDACTED)** no arquivo final
+
+---
+
+## 🤫 Quando `diff` não retorna nada?
+
+Se você comparar um arquivo com ele mesmo:
+
+```bash
+diff myapp-backend.log myapp-backend.log
+```
+
+📭 **Não haverá saída** — isso significa que **os arquivos são idênticos**.
+
+---
+
+## 🗂️ Extra: comparando diretórios
+
+O `diff` também pode comparar diretórios inteiros:
+
+```bash
+diff diretorio1/ diretorio2/
+```
+
+🔍 Isso ajuda a rastrear mudanças em projetos inteiros, muito útil para:
+
+- ✅ Revisar código
+- 🛠️ Criar patches
+- 🔐 Auditar alterações no sistema
+
+---
+
+## ✅ Conclusão
+
+`diff` é uma ferramenta essencial para desenvolvedores, analistas e administradores de sistemas. Ele nos permite entender:
+
+- O que mudou
+- Onde mudou
+- Como mudou
+
+---
+
+# 📑 Comando `diff` no Linux
+
+O comando `diff` no Linux é usado para **comparar o conteúdo de arquivos ou diretórios**, identificando as diferenças entre eles.  
+🛠️ Muito útil para desenvolvedores e administradores de sistemas que precisam revisar mudanças entre versões de arquivos ou detectar alterações em diretórios.
+
+---
+
+## 🔍 Comparação de Arquivos Simples
+
+**Comando:**
+```bash
+diff arquivo1 arquivo2
+```
+
+📌 Compara `arquivo1` com `arquivo2` e mostra **apenas as linhas diferentes** entre eles.  
+📎 O formato de saída padrão usa os símbolos `<` e `>` para indicar de qual arquivo é cada linha.
+
+---
+
+## 📁 Comparação Recursiva de Diretórios
+
+**Comando:**
+```bash
+diff -r dir1 dir2
+```
+
+📂 Compara **todos os arquivos dentro de `dir1` e `dir2`**, recursivamente.  
+✅ Mostra diferenças entre **arquivos correspondentes** em ambos os diretórios.  
+✨ Ideal para comparar versões completas de projetos ou backups.
+
+---
+
+## 🧩 Gerar Arquivo de Diferenças (Patch)
+
+**Comando:**
+```bash
+diff -u arquivo1 arquivo2 > patch.diff
+```
+
+🧷 A opção `-u` (ou `--unified`) mostra diferenças com **contexto** das linhas modificadas.  
+🛠️ Útil para criar **patches** que podem ser aplicados com o comando `patch`.
+
+---
+
+## 🪞 Comparação Lado a Lado
+
+**Comando:**
+```bash
+diff -y arquivo1 arquivo2
+```
+
+👀 Exibe as diferenças **lado a lado**, facilitando a leitura.  
+⚡ Ideal para comparações rápidas e visuais.
+
+---
+
+## 🚫 Ignorar Diferenças Específicas
+
+**Comando:**
+```bash
+diff -i arquivo1 arquivo2
+```
+
+🔡 A opção `-i` **ignora diferenças de maiúsculas/minúsculas**.  
+🔧 Outras opções úteis:  
+- `-w`: ignora **espaços em branco**  
+- `-B`: ignora **linhas em branco**  
+
+🎯 Perfeito para focar só nas **diferenças relevantes**.
+
+---
+
+## 📄 Comparar Arquivos como Texto (mesmo se forem binários)
+
+**Comando:**
+```bash
+diff --text arquivo1 arquivo2
+```
+
+🔍 Força o diff a tratar **qualquer arquivo como texto**.  
+🧠 Útil para arquivos com conteúdo misto ou logs de sistemas.
+
+---
+
+## 🧪 Exemplo Prático
+
+Imagine que você tenha dois arquivos de configuração: `config1.conf` e `config2.conf`.  
+Para ver rapidamente o que mudou entre eles, rode:
+
+```bash
+diff -u config1.conf config2.conf
+```
+
+📋 Resultado: Diferenças claras de linhas adicionadas, removidas ou modificadas.  
+🧩 Isso ajuda a **identificar mudanças importantes** e **diagnosticar problemas**.
+
+---
+
+🎓 **Resumo Final:**  
+O `diff` é uma ferramenta essencial no mundo Linux para rastrear mudanças com precisão, comparar versões e manter tudo sob controle de forma eficiente! 💪🐧
+
+---
