@@ -17,4 +17,7 @@ find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
     sort "${arquivo}.filtrado" -o "${arquivo}.filtrado"
 
     uniq "${arquivo}.filtrado" > "${arquivo}.unico"
+
+    num_palavras=$(wc -w < "${arquivo}.unico")
+    num_linhas=$(wc -l < "${arquivo}.unico")
 done

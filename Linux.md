@@ -1415,3 +1415,129 @@ diff -u config1.conf config2.conf
 O `diff` é uma ferramenta essencial no mundo Linux para rastrear mudanças com precisão, comparar versões e manter tudo sob controle de forma eficiente! 💪🐧
 
 ---
+
+# 📊 Módulo 4: Analisando informações de arquivos
+
+## 📌 Tópico: Contando linhas e palavras com `wc`
+
+Agora que temos os arquivos `.unico`, é hora de extrair informações **quantitativas** deles, como:
+
+- 🔢 Número de linhas
+- 📝 Quantidade de palavras
+
+Essas informações nos ajudam a entender o volume de dados nos logs e monitorar possíveis aumentos, o que pode indicar **problemas na aplicação**.
+
+---
+
+## 🧮 Contando linhas com `wc -l`
+
+O comando `wc` (word count) serve para contar várias coisas em um arquivo. Com a opção `-l`, ele conta **linhas**:
+
+```bash
+wc -l myapp-backend.log.unico
+```
+
+🧾 Saída:
+
+```lua
+18 myapp-backend.log.unico
+```
+
+👉 Resultado: o arquivo tem 18 linhas.
+
+Se quisermos apenas o número (sem o nome do arquivo), usamos o redirecionamento de entrada **<**:
+
+```bash
+wc -l < myapp-backend.log.unico
+```
+
+📤 Saída limpa:
+
+```18
+```
+
+---
+
+## ✍️ Contando palavras com wc -w
+
+Para contar palavras, usamos **-w**:
+
+```bash
+wc -w myapp-backend.log.unico
+```
+
+📄 Saída:
+
+```lua
+153 myapp-backend.log.unico
+```
+
+Com redirecionamento, para ver só o número:
+
+```bash
+wc -w < myapp-backend.log.unico
+```
+
+📤 Saída limpa:
+
+```
+153
+```
+
+---
+
+## 🛠️ Incrementando o script monitoramento-logs.sh
+
+Vamos adicionar esses comandos ao nosso script. Dentro do while, logo após gerar o .unico, adicionamos:
+
+```bash
+num_palavras=$(wc -w < "${arquivo}.unico")
+num_linhas=$(wc -l < "${arquivo}.unico")
+```
+✨ Isso armazena os resultados em variáveis, podendo ser usados para log, monitoramento ou análise posterior.
+
+---
+
+## 💻 Script atualizado:
+
+```bash
+#!/bin/bash
+
+LOG_DIR="../myapp/logs"
+
+echo "Verificando logs no diretorio $LOG_DIR"
+
+find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
+    grep "ERROR" "$arquivo" > "${arquivo}.filtrado"
+    grep "SENSITIVE_DATA" "$arquivo" >> "${arquivo}.filtrado"
+
+    sed -i 's/User password is .*/User password is REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User password reset request with token .*/User password reset request with token REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/API key leaked: .*/API key leaked: REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User credit card last four digits: .*/User credit card last four digits: REDACTED/g' "${arquivo}.filtrado"
+    sed -i 's/User session initiated with token: .*/User session initiated with token: REDACTED/g' "${arquivo}.filtrado"
+
+    sort "${arquivo}.filtrado" -o "${arquivo}.filtrado"
+
+    uniq "${arquivo}.filtrado" > "${arquivo}.unico"
+
+    num_palavras=$(wc -w < "${arquivo}.unico")
+    num_linhas=$(wc -l < "${arquivo}.unico")
+done
+```
+
+---
+
+### ✅ Conclusão
+
+Com os comandos **wc -w** e **wc -l**:
+
+* 📏 Você mede a quantidade de conteúdo nos logs.
+* 📈 Pode monitorar aumentos suspeitos.
+* 🧠 Ganha mais inteligência operacional nos seus scripts.
+
+---
+
+📚 Dica final: Use esses dados para gerar relatórios e observar o comportamento dos logs ao longo do tempo. Isso é essencial para detecção precoce de problemas!
+
+---
