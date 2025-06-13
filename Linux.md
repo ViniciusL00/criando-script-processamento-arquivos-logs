@@ -1827,3 +1827,106 @@ logs_combinados_2025-06-13
 * Use **>>** sempre que quiser adicionar conteúdo sem sobrescrever arquivos existentes.
 
 ---
+
+# 🕒 Comando `date` no Linux: Manipulação de Data e Hora
+
+O comando `date` é uma ferramenta poderosa no Linux para **exibir, definir e manipular datas e horários**. É essencial em tarefas de automação, scripts e controle de logs. Aqui está um resumo completo das opções mais úteis. 🚀
+
+---
+
+## 📆 Exibindo Data e Hora Atual
+
+Para mostrar a data e hora padrão:
+
+```bash
+date
+```
+
+### 🎨 Formato Personalizado com `+`
+
+Use `+` seguido de especificadores para personalizar a saída:
+
+```bash
+date +"%Y-%m-%d %H:%M:%S"
+```
+
+| Especificador | Significado             |
+|---------------|--------------------------|
+| `%Y`          | Ano completo (ex: 2024)   |
+| `%m`          | Mês (01-12)              |
+| `%d`          | Dia do mês (01-31)       |
+| `%H`          | Hora (00-23)             |
+| `%M`          | Minuto (00-59)           |
+| `%S`          | Segundo (00-59)          |
+
+---
+
+## ⏱️ Timestamp (Segundos desde 1970)
+
+Para obter o número de segundos desde o Unix Epoch:
+
+```bash
+date +%s
+```
+
+---
+
+## 🛠️ Definindo Data e Hora Manualmente
+
+Você pode ajustar a data/hora com `-s` (necessita `sudo`):
+
+```bash
+sudo date -s "2024-12-01 10:30:00"
+```
+
+---
+
+## 🧮 Manipulação de Datas com `-d`
+
+Use `-d` para **adicionar ou subtrair tempo** da data atual:
+
+```bash
+date -d "+1 day"         # Amanhã 📅
+date -d "yesterday"      # Ontem ⏳
+date -d "next Friday"    # Próxima sexta-feira 🎉
+```
+
+---
+
+## 🧩 Exibindo Partes Específicas da Data
+
+Mostre partes específicas usando:
+
+```bash
+date +"%A"   # Dia da semana (ex: Monday) 📅
+date +"%B"   # Mês por extenso (ex: March) 🌸
+```
+
+---
+
+## 🌍 Exibindo Horário Universal (UTC)
+
+Use `-u` para exibir o tempo em UTC:
+
+```bash
+date -u
+```
+
+### Exemplo Combinado:
+
+```bash
+date -u +"%Y-%m-%d %H:%M:%S UTC"
+```
+
+---
+
+## ✅ Conclusão
+
+Com o `date`, você pode:
+
+- 📌 Agendar tarefas
+- 🗂️ Nomear arquivos com datas
+- 🔧 Automatizar logs e backups
+- 🧠 Manter controle temporal nos seus scripts
+
+---
