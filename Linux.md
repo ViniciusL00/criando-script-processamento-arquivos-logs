@@ -2034,3 +2034,358 @@ Agora, com nome dinâmico e caminho organizado! 🚀
 Refatorar scripts com ferramentas como **sed** torna o código mais limpo, dinâmico e fácil de manter. Isso é especialmente importante em ambientes de produção ou automações recorrentes. 📈
 
 ---
+
+# 🧠 Condicionais em Scripts Bash + Ordenação por Data 🗂️
+
+Como utilizar estruturas condicionais (`if`, `elif`, `else`) em scripts Bash para processar logs de forma inteligente, além de aplicar ordenação por data com o comando `sort`. Ideal para DevOps e automatizações! 🚀
+
+---
+
+## 📍 Cenário
+
+Estamos trabalhando com um script chamado `monitoramento-logs.sh` que analisa arquivos de log e salva estatísticas e combinações de forma organizada.
+
+Objetivos desta etapa:
+- 🏷️ Adicionar tags [FRONTEND] ou [BACKEND] às linhas dos logs
+- 📌 Identificar e marcar a origem de cada log
+- 🧾 Salvar tudo num arquivo unificado
+- 📅 Ordenar os logs combinados por data (que está na **segunda coluna**)
+
+---
+
+## 🧱 Estrutura Condicional no Bash
+
+### ✅ Sintaxe básica:
+
+```bash
+if [[ condição ]]; then
+    # ações se for verdadeira
+elif [[ outra_condição ]]; then
+    # ações se a segunda for verdadeira
+else
+    # ações se nenhuma for verdadeira
+fi
+```
+
+---
+
+## 🏷️ Identificando FRONTEND e BACKEND
+
+Dentro do laço `for`, usamos a variável `$nome_arquivo` para verificar se o nome do log é `frontend` ou `backend`. O comando `sed` adiciona a tag no início da linha:
+
+```bash
+if [[ "$nome_arquivo" == *frontend* ]]; then
+    sed 's/^/[FRONTEND] /' "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+elif [[ "$nome_arquivo" == *backend* ]]; then
+    sed 's/^/[BACKEND] /' "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+else
+    cat "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+fi
+```
+
+---
+
+## 🧹 Limpando os arquivos antigos
+
+Antes de rodar novamente o script, deletamos os arquivos da pasta de logs processados:
+
+```bash
+cd ../myapps/logs-processados/
+rm log*
+```
+
+---
+
+## 🧪 Executando o Script
+
+```bash
+cd scripts-linux/
+./monitoramento-logs.sh
+```
+
+Depois verifique os arquivos:
+
+```bash
+cd ../myapps/logs-processados/
+ls
+cat logs_combinados_YYYY-MM-DD.log
+```
+
+Você verá algo como:
+
+```txt
+[FRONTEND] 2025-06-01 10:10:10 INFO Componente carregado
+[BACKEND] 2025-06-01 10:10:11 ERROR Falha ao conectar no banco
+```
+
+---
+
+## 🔢 Ordenando por Data
+
+Como a data está na segunda coluna (após a tag), usamos:
+
+```bash
+sort -k2 "${ARQUIVO_DIR}/logs_combinados_$(date +%F)" -o "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+```
+
+- `-k2` → ordena pela 2ª coluna
+- `-o` → salva no próprio arquivo
+
+---
+
+## 🏁 Resultado Final
+
+- ✅ Logs marcados com a origem (FRONTEND / BACKEND / outro)
+- ✅ Logs salvos num único arquivo por data
+- ✅ Linhas ordenadas por data e hora
+
+Agora seu script está mais organizado, legível e pronto para análise! 🎯📊
+
+---
+
+# 🧠 Estruturas Condicionais no Bash
+
+No Bash, as **estruturas condicionais** são usadas para executar comandos com base em **testes lógicos**. A principal estrutura é o `if`, que pode ser combinada com `elif` e `else`.
+
+---
+
+## 🧱 Estrutura Básica
+
+```bash
+if [ condição ]; then
+    # comandos se condição for verdadeira
+elif [ outra condição ]; then
+    # comandos se a primeira for falsa e esta for verdadeira
+else
+    # comandos se todas as condições forem falsas
+fi
+```
+
+### 🔍 Explicando:
+
+- `if [ condição ];`: Inicia o bloco condicional. Os colchetes **precisam de espaço entre eles e a condição**.
+- `then`: Início do bloco de comandos executados se a condição for verdadeira.
+- `elif [ condição ]; then`: Verifica uma **nova condição** caso a primeira seja falsa.
+- `else`: Executa o que está dentro **se nenhuma condição anterior for verdadeira**.
+- `fi`: Finaliza o bloco `if` (o contrário de "if").
+
+---
+
+## ✅ Exemplo com Número
+
+```bash
+#!/bin/bash
+
+num=0
+
+if [ "$num" -gt 0 ]; then
+    echo "O número é positivo."
+elif [ "$num" -lt 0 ]; then
+    echo "O número é negativo."
+else
+    echo "O número é zero."
+fi
+```
+
+🖨️ Saída esperada:
+```
+O número é zero.
+```
+
+---
+
+## 🔧 Operadores Comuns
+
+| Operador | Significado              | Tipo     |
+|----------|---------------------------|----------|
+| `-eq`    | Igual                     | Números  |
+| `-ne`    | Diferente                 | Números  |
+| `-gt`    | Maior que                 | Números  |
+| `-lt`    | Menor que                 | Números  |
+| `-ge`    | Maior ou igual            | Números  |
+| `-le`    | Menor ou igual            | Números  |
+| `=`      | Igualdade de strings      | Strings  |
+| `!=`     | Desigualdade de strings   | Strings  |
+| `-z`     | Verifica se string está vazia | Strings |
+
+---
+
+## 🧑‍💻 Exemplo com String
+
+```bash
+#!/bin/bash
+
+nome="Alice"
+
+if [ "$nome" = "Alice" ]; then
+    echo "Olá, Alice!"
+else
+    echo "Você não é Alice."
+fi
+```
+
+🖨️ Saída esperada:
+```
+Olá, Alice!
+```
+
+---
+
+## 🧠 Dica Rápida
+- SEMPRE deixe **espaços entre colchetes e a condição**.
+- Cuidado com **strings vazias** — use `-z "$variavel"` para testar isso.
+- Feche corretamente o bloco com `fi`.
+
+---
+
+# 🧠 Comando `case` em Bash — Resumo Explicativo
+
+O comando `case` no Bash é uma estrutura de controle que **facilita a escolha entre múltiplas opções**, sendo uma alternativa elegante e limpa ao uso excessivo de `if/elif/else`. Ideal quando você precisa testar **vários padrões**!
+
+---
+
+## 🧩 Estrutura Básica
+
+```bash
+case variável in
+    padrão1)
+        # comandos para padrão1
+        ;;
+    padrão2)
+        # comandos para padrão2
+        ;;
+    *)
+        # comandos caso nenhum padrão seja atendido
+        ;;
+esac
+```
+
+## 🧷 Explicando a estrutura:
+
+* **case variável in**: Inicia a estrutura e compara o valor da variável com os padrões.
+* **padrão)**: Caso a variável combine com o padrão, executa o bloco correspondente.
+* **;;**: Indica o fim do bloco daquele padrão.
+* ***)**: Um coringa. Executa caso nenhum padrão anterior seja correspondente (como um **else**).
+* **esac**: Finaliza a estrutura (**case** escrito ao contrário, estilo Bash).
+
+---
+
+## 💻 Exemplo prático no contexto de logs
+
+Imagine que estamos processando logs e queremos adicionar uma tag baseada no nome do arquivo:
+
+```bash
+case "$nome_arquivo" in
+    *frontend*)
+        sed 's/^/[FRONT-END] /' "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+        ;;
+    *backend*)
+        sed 's/^/[BACK-END] /' "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+        ;;
+    *)
+        cat "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+        ;;
+esac
+```
+
+## 📌 O que está rolando aqui:
+
+1. **case "$nome_arquivo" in**: Verifica o valor da variável **nome_arquivo**.
+2. ***frontend*)**: Se contém "frontend", insere a tag **[FRONT-END]** no início das linhas.
+3. ***backend*)**: Se contém "backend", insere a tag **[BACK-END]**.
+4. ***)**: Se não bater com nenhum dos dois, apenas adiciona o conteúdo como está.
+5. **;;**: Fim do bloco de cada padrão.
+6. **esac**: Finaliza a estrutura.
+
+---
+
+### 🎯 Quando usar case?
+
+Use **case** quando:
+
+✅ Você tiver múltiplas condições baseadas em padrões de string.
+✅ Quiser código mais limpo e legível que um monte de if/elif.
+✅ Precisa tratar valores específicos ou padrões com curingas.
+
+---
+
+### 📚 Dica
+
+Você pode combinar case com comandos como sed, grep, cat, etc. para montar scripts de monitoramento, automação de servidores, processamento de arquivos e mais!
+
+---
+
+# 🐚 Comparando [[ ... ]] vs [ ... ] no Bash
+
+No Bash, existem duas formas principais de fazer comparações em estruturas condicionais:  
+🔹 Os **colchetes simples** `[ ... ]` (ou o comando `test`)  
+🔹 Os **colchetes duplos** `[[ ... ]]`  
+
+Embora parecidos, eles têm diferenças importantes que afetam **legibilidade**, **funcionalidade** e **segurança**. Bora entender! 💡
+
+---
+
+## 🔐 Colchetes Duplos `[[ ... ]]`
+
+✅ **Sintaxe Melhorada**  
+Permite o uso de operadores lógicos como `&&` e `||` sem precisar escapar ou complicar.
+
+✅ **Suporte a Padrões (Globbing)**  
+Você pode usar correspondência de padrões diretamente, como `*frontend*`.
+
+✅ **Menos Ambiguidade**  
+Dispensa o uso obrigatório de aspas, mesmo com variáveis vazias ou com espaços — menos chance de erro!
+
+✅ **Mais Seguro**  
+Lida melhor com strings que contêm caracteres especiais (tipo `*`, `?`, ou espaços).
+
+📌 **Exemplo**:
+
+```bash
+if [[ "$nome_arquivo" == *frontend* ]]; then
+    echo "É um arquivo front-end."
+fi
+```
+
+---
+
+## 🧱 Comando test ou Colchetes Simples [ ... ]
+
+⚠️ Sintaxe Limitada
+Mais antigo, precisa de mais cuidado com espaços e aspas ao redor de variáveis.
+
+⚠️ Menos Recursos
+Sem suporte direto a padrões — precisa de **=** ou **!=** para comparação de strings.
+
+⚠️ Operadores Lógicos Menos Intuitivos
+Usa **-a** (AND) e **-o** (OR), que são mais difíceis de ler e mais propensos a erro.
+
+## 📌 Exemplo:
+
+```bash
+if [ "$nome_arquivo" = "*frontend*" ]; then
+    echo "É um arquivo front-end."
+fi
+```
+
+⚠️ Nesse caso, o padrão ***frontend*** não será interpretado corretamente, pois ele é comparado literalmente.
+
+---
+
+### 🧠 Conclusão
+
+Mesmo que ambos funcionem, prefira **[[ ... ]]** sempre que possível!
+Ele é mais moderno, mais seguro e te dá muito mais flexibilidade.
+
+---
+
+## ✅ TL;DR
+
+| Característica     | `[[ ... ]]`       | `[ ... ]` / `test` |
+| ------------------ | ----------------- | ------------------ |
+| Suporte a padrões  | ✅ Sim             | ❌ Não           |
+| Uso de operadores  | ✅ &&, \|\| direto | ❌ -a, -o        |
+| Aspas obrigatórias | ❌ Não             | ✅ Sim           |
+| Segurança geral    | ✅ Alta            | ⚠️ Menor         |
+
+---
