@@ -1930,3 +1930,107 @@ Com o `date`, você pode:
 - 🧠 Manter controle temporal nos seus scripts
 
 ---
+
+# 🛠️ Refatorando o Script de Monitoramento de Logs no Linux
+
+Melhorias feitas no script `monitoramento-logs.sh` usando o comando `sed` para automatizar substituições de texto, com foco em salvar arquivos estatísticos de forma mais organizada.
+
+---
+
+## 🎯 Objetivo
+
+Melhorar a organização dos arquivos gerados pelo script:
+- Adicionar **data** ao nome do arquivo `log_stats.txt`
+- Salvar os arquivos estatísticos no diretório `logs-processados`
+
+---
+
+## 📂 Estrutura de Diretórios
+
+```bash
+scripts-linux/
+├── monitoramento-logs.sh
+└── ../myapps/logs-processados/
+```
+
+---
+
+## 📦 Criando a Variável do Diretório
+
+No início do script, adicionamos uma nova variável:
+
+```bash
+ARQUIVO_DIR="../myapps/logs-processados"
+```
+
+---
+
+## 🧠 Refatorando com sed
+
+Para substituir todas as ocorrências de **log_stats.txt** por um caminho mais completo e dinâmico, usamos:
+
+```bash
+sed -i 's/log_stats.txt/"${ARQUIVO_DIR}\/log_stats_$(date +%F).txt"/' monitoramento-logs.sh
+```
+
+## 🧩 Explicando o comando:
+
+* **sed -i** → Altera diretamente o arquivo.
+* **'s/antigo/novo/'** → Substitui texto antigo por novo.
+* **log_stats.txt** → Texto a ser substituído.
+* **"${ARQUIVO_DIR}\/log_stats_$(date +%F).txt"** → Novo texto com caminho e data.
+* **\/** → Contrabarra para escapar a barra no caminho.
+* **$(date +%F)** → Retorna a data no formato **YYYY-MM-DD**.
+
+---
+
+## 💡 Por que isso é útil?
+
+Em scripts longos, fazer substituições manuais pode ser:
+
+* 🔁 Repetitivo
+* 😵 Sujeito a erros
+* ⏳ Demorado
+
+Com o **sed**, isso vira uma tarefa de segundos. ⏱️
+
+---
+
+### ✅ Testando
+
+Após rodar o comando **sed**, execute o script:
+
+```bash
+./monitoramento-logs.sh
+```
+
+Verifique se o novo arquivo foi criado dentro de **logs-processados**:
+
+```bash
+cd ../myapps/logs-processados/
+ls
+cat log_stats_YYYY-MM-DD.txt
+```
+
+---
+
+### 🧾 Resultado Esperado
+
+Um arquivo de estatísticas bem organizado:
+
+```txt
+Arquivo: myapp-frontend.log.unico
+Número de linhas: 11
+Número de palavras: 117
+--------------------------
+```
+
+Agora, com nome dinâmico e caminho organizado! 🚀
+
+---
+
+## 🏁 Conclusão
+
+Refatorar scripts com ferramentas como **sed** torna o código mais limpo, dinâmico e fácil de manter. Isso é especialmente importante em ambientes de produção ou automações recorrentes. 📈
+
+---

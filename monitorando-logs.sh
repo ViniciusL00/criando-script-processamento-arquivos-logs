@@ -1,6 +1,9 @@
 #!/bin/bash
 
 LOG_DIR="../myapps/logs"
+ARQUIVO_DIR="../myapps/logs-processados"
+
+mkdir -p $ARQUIVO_DIR
 
 echo "Verificando logs no diretorio $LOG_DIR"
 
