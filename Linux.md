@@ -1663,3 +1663,93 @@ wc -l < arquivo.txt
 | `-L`  | Mostra tamanho da linha mais longa |
 
 ---
+
+# 📊 Salvando Dados de Análise com `echo` no Shell Script
+
+No monitoramento de logs em sistemas Linux, é fundamental **registrar estatísticas** sobre os arquivos processados, como número de linhas e palavras. Isso nos ajuda a manter um **histórico** e identificar padrões de uso ou possíveis problemas.
+
+---
+
+## 🔄 Atualizando o Script de Monitoramento
+
+Após extrair os dados com `wc`, usamos o comando `echo` para **salvar os resultados em um arquivo** chamado `log_stats.txt`. O `echo`, além de exibir mensagens no terminal, também pode ser usado para **escrever em arquivos** com o operador `>>`, que adiciona sem sobrescrever o conteúdo anterior.
+
+### 🧠 Exemplo de Comandos Usados
+
+```bash
+num_palavras=$(wc -w < "${arquivo}.unico")
+num_linhas=$(wc -l < "${arquivo}.unico")
+```
+
+Esses comandos armazenam as **quantidades de palavras** e **linhas** em variáveis.
+
+### 📥 Salvando os Dados com `echo`
+
+```bash
+echo "Arquivo: ${arquivo}.unico" >> log_stats.txt
+echo "Número de linhas: $num_linhas" >> log_stats.txt
+echo "Número de palavras: $num_palavras" >> log_stats.txt
+echo "--------------------------" >> log_stats.txt
+```
+
+Com isso, geramos um **arquivo de estatísticas acumulado**, organizado e reutilizável.
+
+---
+
+## 🧹 Melhorando a Visualização com `basename`
+
+O comando `basename` remove o caminho completo e deixa **somente o nome do arquivo**, tornando o relatório mais limpo:
+
+```bash
+nome_arquivo=$(basename "${arquivo}.unico")
+```
+
+E substituímos no `echo`:
+
+```bash
+echo "Arquivo: $nome_arquivo" >> log_stats.txt
+```
+
+---
+
+## 🧪 Resultado Final
+
+Após rodar o script:
+
+```bash
+./monitoramento-logs.sh
+cat log_stats.txt
+```
+
+### 📄 Exemplo de Saída:
+
+```
+Arquivo: myapp-backend.log.unico
+Número de linhas: 11
+Número de palavras: 117
+--------------------------
+Arquivo: myapp-frontend.log.unico
+Número de linhas: 18
+Número de palavras: 153
+--------------------------
+```
+
+---
+
+## 💡 Dica Final
+
+Antes de rodar o script novamente, delete o arquivo antigo de estatísticas para evitar duplicação de dados:
+
+```bash
+rm log_stats.txt
+```
+
+---
+
+## ✅ Benefícios do Processo
+
+- Armazena histórico das análises 📂  
+- Facilita visualização de mudanças nos logs ao longo do tempo 🔍  
+- Permite inclusão desses dados em painéis ou análises futuras 📈
+
+---

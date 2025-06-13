@@ -20,4 +20,11 @@ find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
 
     num_palavras=$(wc -w < "${arquivo}.unico")
     num_linhas=$(wc -l < "${arquivo}.unico")
+
+    nome_arquivo=$(basename "${arquivo}.unico")
+
+    echo "Arquivo: $nome_arquivo" >> log_stats.txt
+    echo "Número de linhas: $num_linhas" >> log_stats.txt
+    echo "Número de palavras: $num_palavras" >> log_stats.txt
+    echo "---------------------" >> log_stats.txt
 done
