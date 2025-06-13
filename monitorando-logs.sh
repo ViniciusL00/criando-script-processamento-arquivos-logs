@@ -31,5 +31,13 @@ find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
     echo "Número de palavras: $num_palavras" >> "${ARQUIVO_DIR}/log_stats_$(date +%F).txt"
     echo "---------------------" >> "${ARQUIVO_DIR}/log_stats_$(date +%F).txt"
 
-    cat "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+        if [[ "$nome_arquivo" == *frontend* ]]; then
+                sed 's/^/[FRONTEND] /' "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+        elif [[ "$nome_arquivo" == *backend* ]]; then
+                sed 's/^/[BACKEND] /' "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+        else cat "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
+        fi
+
 done
+
+sort -k2 "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log" -o "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
