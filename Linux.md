@@ -1753,3 +1753,77 @@ rm log_stats.txt
 - Permite inclusão desses dados em painéis ou análises futuras 📈
 
 ---
+
+# 📚 Salvando e Concatenando Logs com Shell Script
+
+Este processo de **salvar estatísticas de arquivos de log** e **concatená-los em um único arquivo**, usando comandos shell no Linux. Isso facilita a análise de múltiplos arquivos de log na aplicação! 🚀
+
+---
+
+## 🗂️ Organização com Diretórios
+
+Para manter os arquivos organizados, criamos uma nova variável chamada `ARQUIVO_DIR`, que define o caminho onde os **logs processados** serão salvos:
+
+```bash
+ARQUIVO_DIR="../myapps/logs-processados"
+```
+
+Depois, usamos o comando **mkdir** -p para garantir que o diretório exista:
+
+```bash
+mkdir -p $ARQUIVO_DIR
+```
+
+*  **-p**: Cria diretórios pais caso não existam e evita erro se o diretório já existir.
+
+---
+
+## 📅 Usando Data no Nome do Arquivo
+
+Para gerar um nome de arquivo com a data atual, usamos:
+
+```bash
+$(date +%F)
+```
+
+* Isso retorna a data no formato **YYYY-MM-DD**, ideal para nomear arquivos de forma única e cronológica.
+
+---
+
+## 📦 Concatenando Logs com cat
+
+Para unificar todos os logs **.unico** em um só, usamos o comando **cat** com redirecionamento:
+
+```bash
+cat "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F)"
+```
+
+* Isso garante que os conteúdos de todos os arquivos **.unico** sejam concatenados no arquivo **logs_combinados_DATA**, substituindo **DATA** pela data atual.
+
+---
+
+### ✅ Resultado Final
+
+Ao rodar o script:
+
+```bash
+./monitoramento-logs.sh
+```
+
+E verificar o diretório **logs-processados**, teremos um arquivo como:
+
+```
+logs_combinados_2025-06-13
+```
+
+* 📂 Ele conterá todos os logs **.unico** reunidos, prontos para análise ou visualização com **cat** ou qualquer outro comando de leitura.
+
+---
+
+## 🧠 Dica de boas práticas
+
+* Variáveis constantes: UPPER_CASE (ex: **LOG_DIR**, **ARQUIVO_DIR**)
+* Variáveis dinâmicas: lowercase (ex: **num_linhas**, **nome_arquivo**)
+* Use **>>** sempre que quiser adicionar conteúdo sem sobrescrever arquivos existentes.
+
+---

@@ -27,4 +27,6 @@ find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
     echo "Número de linhas: $num_linhas" >> log_stats.txt
     echo "Número de palavras: $num_palavras" >> log_stats.txt
     echo "---------------------" >> log_stats.txt
+
+    cat "${arquivo}.unico" >> "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log"
 done
