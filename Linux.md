@@ -2615,3 +2615,120 @@ tar -xzvf logs_2025-06-16.tar.gz
 O comando `tar` é uma ferramenta robusta para empacotar e desempacotar arquivos no Linux. Entender suas opções te dá controle total sobre backups, transferências e organização de arquivos! 🧩🚀
 
 ---
+
+# ⏰ Agendando Tarefas com Cron e At no Linux
+
+## 🤖 Automatização de Scripts com o `cron`
+
+Manualmente rodar scripts todo dia? Péssima ideia. A gente esquece. Por isso existe o **cron**, o agendador de tarefas do Linux. Vamos automatizar esse processo!
+
+### ✍️ Editando o Crontab
+
+Abra o arquivo de agendamento com:
+
+```bash
+crontab -e
+```
+
+Se for a primeira vez, o sistema vai perguntar qual editor usar. Escolha o `nano` se quiser facilitar.
+
+Você verá algo assim no final:
+
+```
+# m h dom mon dow command
+```
+
+Ou seja:
+
+- 🕐 Minuto (0 - 59)
+- 🕑 Hora (0 - 23)
+- 📅 Dia do mês (1 - 31)
+- 🗓️ Mês (1 - 12)
+- 📆 Dia da semana (0 - 7) → Domingo = 0 ou 7
+- 🖥️ Comando ou caminho do script
+
+### ⏲️ Exemplo: Agendar para rodar às 5h da manhã todos os dias
+
+```bash
+0 5 * * * /home/vinic/scripts-linux/monitoramento-logs.sh
+```
+
+> Use `pwd` para descobrir o caminho completo do script.
+
+### 💾 Salvando
+
+Aperte `Ctrl + X`, confirme com `Y` e tecle `Enter`.
+
+### 🔍 Verificando o agendamento
+
+```bash
+crontab -l
+```
+
+### ⚠️ Lembrete
+
+O script precisa ter **permissão de execução** (`chmod +x`).
+
+---
+
+## 🧹 Limpando agendamentos
+
+Para remover tarefas agendadas:
+
+```bash
+crontab -e
+```
+
+Apague a linha do agendamento desejado. Para verificar:
+
+```bash
+crontab -l
+```
+
+---
+
+## 🕐 Agendando Execuções Únicas com `at`
+
+### 📦 Instalação do `at` (se necessário)
+
+```bash
+sudo apt update
+sudo apt install at
+```
+
+### 🚀 Ativando o serviço `atd`
+
+```bash
+sudo systemctl enable atd
+sudo systemctl start atd
+```
+
+Verifique se está rodando:
+
+```bash
+systemctl status atd
+```
+
+### ✅ Agendando execução única
+
+```bash
+echo "/caminho/para/seu/script/monitoramento-logs.sh" | at now + 3 minutes
+```
+
+### 📋 Ver tarefas agendadas
+
+```bash
+atq
+```
+
+---
+
+## 🔚 Conclusão Geral
+
+✅ Criamos scripts com permissão de execução.  
+✅ Usamos `while`, `grep`, `sed`, `wc` e condicionais.  
+✅ Adicionamos tags, unimos e ordenamos logs.  
+✅ Compactamos e descompactamos arquivos.  
+✅ Automatizamos com `cron` e `at`.
+
+---

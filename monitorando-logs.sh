@@ -7,8 +7,6 @@ TEMP_DIR="../myapps/logs-temp"
 mkdir -p $ARQUIVO_DIR
 mkdir -p $TEMP_DIR
 
-echo "Verificando logs no diretorio $LOG_DIR"
-
 find $LOG_DIR -name "*.log" -print0 | while IFS= read -r -d '' arquivo; do
     grep "ERROR" "$arquivo" > "${arquivo}.filtrado"
     grep "SENSITIVE_DATA" "$arquivo" >> "${arquivo}.filtrado"
