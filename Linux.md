@@ -2498,3 +2498,120 @@ Resultado: Um arquivo `.tar.gz` contendo os logs prontos pra análise! 📊
 Compactar arquivos é essencial para **organizar, economizar espaço** e **facilitar o envio**. Automatizar isso no script garante que cada execução já deixe tudo pronto pro próximo passo. 👌
 
 ---
+
+# 📦 Descompactando Arquivos no Linux
+
+Quando lidamos com arquivos compactados no Linux, é essencial saber como inspecionar e extrair seu conteúdo com segurança. Vamos ver como isso funciona usando o comando `tar` e outras ferramentas de compressão!
+
+---
+
+## 👀 Verificando o conteúdo de um arquivo `.tar.gz`
+
+Antes de sair extraindo qualquer coisa, é boa prática conferir o que tem dentro do arquivo compactado.
+
+```bash
+tar -tzvf logs_2025-06-16.tar.gz
+```
+
+🔍 **Explicando as opções:**
+
+- `-t` → Lista o conteúdo do arquivo.
+- `-z` → Indica que está compactado com `.gz`.
+- `-v` → Modo verbose (mostra detalhes).
+- `-f` → Especifica o nome do arquivo.
+
+📃 **Saída típica:**
+```
+drwxr-xr-x vinic/vinic           0 2025-06-16 14:43 ./
+-rw-r--r-- vinic/vinic       2498 2025-06-16 14:43 ./logs_combinados_2025-06-16.log
+-rw-r--r-- vinic/vinic        205 2025-06-16 14:43 ./log_stats_2025-06-16.txt
+```
+
+---
+
+## 📂 Descompactando um arquivo `.tar.gz`
+
+Para extrair o conteúdo, usamos:
+
+```bash
+tar -xzvf logs_2025-06-16.tar.gz
+```
+
+📌 **Explicando as opções:**
+
+- `-x` → Extrai os arquivos.
+- `-z` → Compactação com `.gz`.
+- `-v` → Exibe o progresso.
+- `-f` → Nome do arquivo.
+
+---
+
+## 🛠️ Outras Opções do `tar`
+
+| Ação                         | Comando Exemplo                                  |
+|------------------------------|--------------------------------------------------|
+| Criar arquivo `.tar`         | `tar -cf arquivo.tar /diretorio`                |
+| Extrair arquivo `.tar`       | `tar -xf arquivo.tar`                            |
+| Extrair arquivos específicos | `tar -xf arquivo.tar arquivo1.txt arquivo2.txt` |
+| Listar conteúdo              | `tar -tf arquivo.tar`                            |
+| Compactar com gzip           | `tar -czf arquivo.tar.gz /diretorio`            |
+| Extrair com gzip             | `tar -xzf arquivo.tar.gz`                        |
+| Adicionar arquivos           | `tar -rf arquivo.tar novo_arquivo.txt`          |
+| Remover arquivos             | `tar --delete -f arquivo.tar arquivo.txt`       |
+| Extrair para outro diretório | `tar -xzf arquivo.tar.gz -C /outro/diretorio`   |
+
+---
+
+## 📚 Outros Métodos de Compactação
+
+### 📁 `zip` e `unzip`
+
+- Compactar:
+  ```bash
+  zip arquivo.zip arquivo1 arquivo2
+  ```
+- Descompactar:
+  ```bash
+  unzip arquivo.zip
+  ```
+
+### 🌀 `bzip2` e `bunzip2`
+
+- Compactar:
+  ```bash
+  bzip2 arquivo
+  ```
+- Descompactar:
+  ```bash
+  bunzip2 arquivo.bz2
+  ```
+
+### 🧊 `xz` e `unxz`
+
+- Compactar:
+  ```bash
+  xz arquivo
+  ```
+- Descompactar:
+  ```bash
+  unxz arquivo.xz
+  ```
+
+### 🧰 `7z` (p7zip)
+
+- Compactar:
+  ```bash
+  7z a arquivo.7z arquivo1 arquivo2
+  ```
+- Descompactar:
+  ```bash
+  7z x arquivo.7z
+  ```
+
+---
+
+## 🧠 Conclusão
+
+O comando `tar` é uma ferramenta robusta para empacotar e desempacotar arquivos no Linux. Entender suas opções te dá controle total sobre backups, transferências e organização de arquivos! 🧩🚀
+
+---
