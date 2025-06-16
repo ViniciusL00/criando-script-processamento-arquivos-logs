@@ -2389,3 +2389,112 @@ Ele é mais moderno, mais seguro e te dá muito mais flexibilidade.
 | Segurança geral    | ✅ Alta            | ⚠️ Menor         |
 
 ---
+
+# 📦 Compactando Arquivos com Bash
+
+## 🗂 Por que Compactar?
+
+Ao final do processamento dos logs, queremos facilitar a **transferência** dos arquivos para outras pessoas que vão analisá-los. Manter vários arquivos soltos não é prático. A solução? Compactar tudo em um único arquivo. 😉
+
+## 📁 Formato Utilizado
+
+No Linux, é comum usar o formato `.tar.gz`, que junta:
+
+* `.tar` (Tape Archive): agrupa vários arquivos em um só.
+* `.gz` (gzip): comprime esse arquivo para economizar espaço.
+
+Esse formato é mais eficiente que o `.zip`, muito usado no Windows.
+
+## 🧰 Comando para Compactar
+
+### Passo a passo:
+
+1. Saia da pasta onde estão os arquivos:
+
+```bash
+cd ..
+```
+
+2. Execute o comando:
+
+```bash
+tar -czf logs-compactados.tar.gz logs-processados/
+```
+
+### Opções:
+
+* `-c`: cria um novo arquivo `.tar`
+* `-z`: aplica compressão gzip (.gz)
+* `-f`: define o nome do arquivo de saída
+
+## 🛠 Automatizando no Script
+
+### 1. Criar Variáveis no Início do Script
+
+```bash
+LOG_DIR="../myapps/logs"
+ARQUIVO_DIR="../myapps/logs-processados"
+TEMP_DIR="../myapps/logs-temp"
+```
+
+### 2. Criar Diretórios (caso não existam)
+
+```bash
+mkdir -p $ARQUIVO_DIR
+mkdir -p $TEMP_DIR
+```
+
+### 3. Mover os Arquivos para Pasta Temporária
+
+```bash
+mv "${ARQUIVO_DIR}/logs_combinados_$(date +%F).log" "$TEMP_DIR/"
+mv "${ARQUIVO_DIR}/logs_stats_$(date +%F).txt" "$TEMP_DIR/"
+```
+
+### 4. Compactar
+
+```bash
+tar -czf "${ARQUIVO_DIR}/logs_$(date +%F).tar.gz" -C "$TEMP_DIR" .
+```
+
+* A opção `-C` muda o diretório atual do tar antes de compactar, usando apenas os nomes dos arquivos (sem caminhos completos).
+* O ponto `.` indica: "compacte tudo a partir daqui".
+
+### 5. Remover a Pasta Temporária
+
+```bash
+rm -r "$TEMP_DIR"
+```
+
+## ✅ Testando o Script
+
+1. Limpar a pasta:
+
+```bash
+cd myapps/logs-processados
+rm log*
+```
+
+2. Executar o script:
+
+```bash
+cd ../../scripts-linux
+./monitoramento-logs.sh
+```
+
+3. Conferir o arquivo final:
+
+```bash
+cd ../myapps/logs-processados
+ls
+```
+
+Resultado: Um arquivo `.tar.gz` contendo os logs prontos pra análise! 📊
+
+---
+
+## 🧠 Conclusão
+
+Compactar arquivos é essencial para **organizar, economizar espaço** e **facilitar o envio**. Automatizar isso no script garante que cada execução já deixe tudo pronto pro próximo passo. 👌
+
+---
